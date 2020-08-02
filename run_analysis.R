@@ -1,15 +1,18 @@
-# run_analysis
-Final project Getting and Cleaning Data
-
-### Download files - Abrir cada arquivo no R usando a função read.table
-
+### Download files
 features <- read.table("UCI HAR Dataset/features.txt", col.names = c("n","functions"))
+
 activities <- read.table("UCI HAR Dataset/activity_labels.txt", col.names = c("code", "activity"))
+
 subjetc_test <- read.table("C:/Users/Rlima/Documents/R/Jonhs Hopkins/run_analysis/UCI HAR Dataset/test/subject_test.txt", col.names = "subject")
+
 X_test <- read.table("C:/Users/Rlima/Documents/R/Jonhs Hopkins/run_analysis/UCI HAR Dataset/test/X_test.txt", col.names = features$functions)
+
 test_labels <- read.table("UCI HAR Dataset/test/y_test.txt", col.names = "code")
+
 subject_train <- read.table("UCI HAR Dataset/train/subject_train.txt", col.names = "subject")
+
 X_train <- read.table("UCI HAR Dataset/train/X_train.txt", col.names = features$functions)
+
 train_labels <- read.table("UCI HAR Dataset/train/y_train.txt", col.names = "code")
 
 ###1.Merges the training and the test sets to create one data set.
@@ -21,31 +24,6 @@ Merged_Data <- cbind(Subject, Y, X)
 
 ###2.Extracts only the measurements on the mean and standard deviation for each measurement.
 
-Banco <- Merged_Data %>% 
-  select(subject, code, contains("mean"), contains("std"))
-
 ###3.Uses descriptive activity names to name the activities in the data set
-
-Banco$code <- activities[Banco$code, 2]
-
 ###4.Appropriately labels the data set with descriptive variable names.
-
-names(Banco)[2] = "activity"
-names(Banco)<-gsub("Acc", "Accelerometer", names(Banco))
-names(Banco)<-gsub("Gyro", "Gyroscope", names(Banco))
-names(Banco)<-gsub("BodyBody", "Body", names(Banco))
-names(Banco)<-gsub("Mag", "Magnitude", names(Banco))
-names(Banco)<-gsub("^t", "Time", names(Banco))
-names(Banco)<-gsub("^f", "Frequency", names(Banco))
-names(Banco)<-gsub("tBody", "TimeBody", names(Banco))
-names(Banco)<-gsub("-mean()", "Mean", names(Banco), ignore.case = TRUE)
-names(Banco)<-gsub("-std()", "STD", names(Banco), ignore.case = TRUE)
-names(Banco)<-gsub("-freq()", "Frequency", names(Banco), ignore.case = TRUE)
-names(Banco)<-gsub("angle", "Angle", names(Banco))
-names(Banco)<-gsub("gravity", "Gravity", names(Banco))
-
 ###5.From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
-Dados <- Banco %>%
-  group_by(subject, activity) %>%
-  summarise_all(funs(mean))
-write.table(Dados, "Dados.txt", row.name=FALSE)
